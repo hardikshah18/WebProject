@@ -5,47 +5,6 @@ import { useRouter } from "next/navigation";
 export default function Dashboard() {
   const router = useRouter();
 
-  // Inline SVG icons as React components
-  const RouletteIcon = () => (
-    <svg
-      className="w-20 h-20 mb-4"
-      viewBox="0 0 64 64"
-      fill="currentColor"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <circle cx="32" cy="32" r="30" stroke="currentColor" strokeWidth="4" fill="none" />
-      <circle cx="32" cy="32" r="4" fill="currentColor" />
-      <path d="M32 2 A30 30 0 0 1 62 32" stroke="currentColor" strokeWidth="4" fill="none" />
-      <path d="M32 2 A30 30 0 0 0 2 32" stroke="currentColor" strokeWidth="4" fill="none" />
-    </svg>
-  );
-
-  const WalletIcon = () => (
-    <svg
-      className="w-20 h-20 mb-4"
-      viewBox="0 0 64 64"
-      fill="currentColor"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect x="8" y="18" width="48" height="28" rx="4" ry="4" stroke="currentColor" strokeWidth="4" fill="none" />
-      <path d="M8 26 H56" stroke="currentColor" strokeWidth="4" />
-      <circle cx="50" cy="34" r="2" fill="currentColor" />
-    </svg>
-  );
-
-  const InterfaceIcon = () => (
-    <svg
-      className="w-20 h-20 mb-4"
-      viewBox="0 0 64 64"
-      fill="currentColor"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect x="10" y="12" width="44" height="32" rx="4" ry="4" stroke="currentColor" strokeWidth="4" fill="none" />
-      <rect x="18" y="20" width="28" height="4" fill="currentColor" />
-      <rect x="18" y="28" width="20" height="4" fill="currentColor" />
-    </svg>
-  );
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       <Navbar />
@@ -79,21 +38,21 @@ export default function Dashboard() {
           <h2 className="text-3xl font-bold text-center mb-8">Why Play With Us?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="flex flex-col items-center">
-              <RouletteIcon />
+              <img src="/roulette_wheel.png" alt="Fast gameplay" className="w-20 h-20 mb-4" />
               <h3 className="text-xl font-semibold mb-2">Real-Time Action</h3>
               <p className="text-center text-gray-400">
                 Experience live roulette spins and see instant results.
               </p>
             </div>
             <div className="flex flex-col items-center">
-              <WalletIcon />
+              <img src="/wallet.svg" alt="Wallet" className="w-20 h-20 mb-4" />
               <h3 className="text-xl font-semibold mb-2">Secure Wallet</h3>
               <p className="text-center text-gray-400">
                 Your funds are safely stored and instantly updated with every game.
               </p>
             </div>
             <div className="flex flex-col items-center">
-              <InterfaceIcon />
+              <img src="/next.svg" alt="Seamless experience" className="w-20 h-20 mb-4" />
               <h3 className="text-xl font-semibold mb-2">Intuitive Interface</h3>
               <p className="text-center text-gray-400">
                 Easy to navigate, track your bets, and win with an elegant interface.
