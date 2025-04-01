@@ -6,7 +6,7 @@ import Bet from "@/models/Bet";
 
 export async function POST(req: Request) {
   try {
-    const { betAmount, selectedNumber, spinResult, winAmount } = await req.json();
+    const { betAmount, selectedNumber, spinResult, winAmount, betType } = await req.json();
     const token = req.headers.get("authorization")?.split(" ")[1];
 
     if (!token) {
@@ -23,24 +23,42 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Update user wallet
+    // Validate bet input
+    if (
+      typeof betAmount !== "number" ||
+      typeof spinResult !== "number" ||
+      typeof winAmount !== "number" ||
+      (selectedNumber === undefined && !betType)
+    ) {
+      return NextResponse.json({ error: "Invalid bet data" }, { status: 400 });
+    }    
+
+    // Update wallet
     user.wallet -= betAmount;
     user.wallet += winAmount;
     await user.save();
 
-    // Create the bet record
     await Bet.create({
       userId,
       betAmount,
-      selectedNumber,
+      selectedNumber: selectedNumber ?? null, // ✅ Fallback ensures null is stored
+      betType: betType ?? null,
       spinResult,
       winAmount,
       createdAt: new Date(),
     });
 
+    console.log({
+      betAmount,
+      selectedNumber,
+      betType,
+      spinResult,
+      winAmount,
+    }); 
+
     return NextResponse.json({ wallet: user.wallet });
   } catch (error) {
-    console.error(error);
+    console.error("Bet placement error:", error);
     return NextResponse.json({ error: "Error processing bet" }, { status: 500 });
   }
 }

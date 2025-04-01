@@ -1,5 +1,5 @@
 import anime from "animejs";
-import React from "react";
+import React, { JSX } from "react";
 import { useEffect } from "react";
 import { rouletteData, WheelNumber } from "./Global";
 

@@ -1,73 +1,81 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue, animate } from "framer-motion";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-export default function RouletteWheel({ spinResult, isSpinning }: { spinResult: number | null; isSpinning: boolean }) {
-  const [wheelRotation, setWheelRotation] = useState(0);
-  const [ballRotation, setBallRotation] = useState(0);
-  const [ballPosition, setBallPosition] = useState({ x: 0, y: -110 }); // Ball starts at the top inside the wheel
+interface RouletteProps {
+  spinResult: number | null;
+  isSpinning: boolean;
+}
+
+export default function RouletteWheel({ spinResult, isSpinning }: RouletteProps) {
+  const [ballPosition, setBallPosition] = useState({ x: 0, y: -110 });
+
+  const wheelRotation = useMotionValue(0);
+  const ballRotation = useMotionValue(0);
 
   useEffect(() => {
-    if (isSpinning) {
-      const randomSpins = Math.floor(Math.random() * 4) + 5; // Between 5 to 8 full spins
-      const finalRotation = randomSpins * 360 + (spinResult !== null ? (spinResult * (360 / 37)) : 0);
+    if (isSpinning && spinResult !== null) {
+      const spins = Math.floor(Math.random() * 3) + 6; // Between 6–8 spins
+      const finalWheelDeg = spins * 360 + spinResult * (360 / 37);
+      const finalBallDeg = -finalWheelDeg * 1.8; // Spins faster & opposite
 
-      setWheelRotation(finalRotation); // Apply rotation to the wheel
+      // Animate wheel
+      animate(wheelRotation, finalWheelDeg, {
+        duration: 4,
+        ease: "easeOut",
+      });
 
-      let ballSpin = finalRotation * 2; // Ball spins 2x faster than the wheel initially
-      let ballSpeed = 60; // Ball starts fast
-      let radius = 110; // Maximum radius (inside the wheel)
+      // Animate ball + inward movement simulation
+      let frame = 0;
+      const totalFrames = 130;
+      const interval = setInterval(() => {
+        const progress = frame / totalFrames;
 
-      const ballInterval = setInterval(() => {
-        setBallRotation((prev) => prev - ballSpeed); // Ball rotates opposite to the wheel
+        // Gradually reduce radius to simulate ball falling
+        const radius = 110 - progress * 50;
 
-        // Reduce ball speed gradually (friction effect)
-        if (ballSpeed > 1.5) {
-          ballSpeed *= 0.97; // Slows down naturally
-        }
+        // Interpolate ball angle
+        const currentDeg = finalBallDeg * progress;
+        const angle = (currentDeg * Math.PI) / 180;
 
-        // Ball moves inward over time (to simulate falling into a pocket)
-        if (radius > 50) {
-          radius -= 0.3; // Smooth inward movement
-        }
+        setBallPosition({
+          x: radius * Math.cos(angle),
+          y: radius * Math.sin(angle),
+        });
 
-        // Calculate the ball's new position
-        const angle = (ballRotation * Math.PI) / 180;
-        const newX = radius * Math.cos(angle);
-        const newY = radius * Math.sin(angle);
-
-        setBallPosition({ x: newX, y: newY });
-
-        // Stop the ball once it's slow enough
-        if (ballSpeed < 1.5) {
-          clearInterval(ballInterval);
-          setBallRotation(finalRotation * -1.5); // Ensure it aligns with the final number
-        }
+        frame++;
+        if (frame > totalFrames) clearInterval(interval);
       }, 30);
     }
   }, [isSpinning, spinResult]);
 
   return (
     <div className="relative flex justify-center items-center w-[320px] h-[320px]">
-      {/* Spinning Wheel */}
+      {/* Wheel */}
       <motion.div
-        animate={{ rotate: wheelRotation }}
-        transition={{ duration: 4, ease: "easeOut" }} // Realistic deceleration
-        className="w-full h-full"
+        style={{ rotate: wheelRotation }}
+        className="w-[300px] h-[300px] rounded-full overflow-hidden"
       >
-        <Image src="/roulette_wheel.png" alt="Roulette Wheel" width={300} height={300} className="rounded-full" />
+        <Image
+          src="/roulette_wheel.png"
+          alt="Roulette Wheel"
+          width={300}
+          height={300}
+          className="rounded-full w-full h-full object-contain"
+          priority
+        />
       </motion.div>
 
-      {/* Ball (Properly Constrained to Stay Inside the Wheel) */}
+      {/* Ball */}
       <motion.div
         animate={{
           x: ballPosition.x,
           y: ballPosition.y,
         }}
-        transition={{ duration: 4, ease: "easeOut" }}
-        className="absolute w-[15px] h-[15px] bg-white rounded-full shadow-lg"
+        transition={{ ease: "easeOut", duration: 0.2 }}
+        className="absolute w-[16px] h-[16px] bg-white rounded-full shadow-md z-10"
       />
     </div>
   );
