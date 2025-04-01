@@ -122,7 +122,7 @@ export default function RoulettePage() {
 
   return (
     <div className="relative flex flex-col items-center justify-start min-h-screen bg-green-800 text-white px-4 pb-20">
-      {/* Falling chips animation (visible on win only) */}
+      
       {showWinAnimation && (
         <video
           src="/falling_poker_chips.webp"
