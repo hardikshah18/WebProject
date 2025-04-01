@@ -26,7 +26,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
         <div className="text-white text-2xl font-bold">🎰 Roulette Game</div>
         <div className="flex flex-wrap gap-6 text-sm md:text-base">
-          <Link href="/dashboard" className="text-white hover:text-gray-300">Dashboard</Link>
+          <Link href="/dashboard" className="text-white hover:text-gray-300">Home</Link>
           <Link href="/wallet" className="text-white hover:text-gray-300">Wallet (${wallet})</Link>
           <Link href="/bets" className="text-white hover:text-gray-300">Bet History</Link>
           <Link href="/roulette" className="text-white hover:text-gray-300">Play Roulette</Link>
