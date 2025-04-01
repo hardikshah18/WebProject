@@ -1,6 +1,5 @@
 import React from "react";
 import { ValueType, Item } from "./Global";
-import Chip from "./Chip";
 import ChipComponent from "./ChipComponent";
 var classNames = require("classnames");
 
